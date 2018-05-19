@@ -51,7 +51,7 @@ public class Board implements KeyListener, ISubject {
 		}
 	}
 	
-	public void mix() {
+	private void mix() {
 		int a = 0;
 		int b = 0;
 		for (int i = 0; i < 50; i++) {
@@ -70,7 +70,7 @@ public class Board implements KeyListener, ISubject {
 		//notifyObserver();
 	}
 	
-	public void move() {
+	private void move() {
 		int ei = ci, ej = cj;
 		// check line
 		// check horizontal line (I)
@@ -143,7 +143,7 @@ public class Board implements KeyListener, ISubject {
 	}
 
 	// check next element is 0
-	public boolean checkUp() {
+	private boolean checkUp() {
 		try {
 			if (board[ci - 1][cj] == 0) {
 				return true;
@@ -154,7 +154,7 @@ public class Board implements KeyListener, ISubject {
 		return false;
 	}
 
-	public boolean checkDown() {
+	private boolean checkDown() {
 		try {
 			if (board[ci + 1][cj] == 0) {
 				return true;
@@ -165,7 +165,7 @@ public class Board implements KeyListener, ISubject {
 		return false;
 	}
 
-	public boolean checkLeft() {
+	private boolean checkLeft() {
 		try {
 			if (board[ci][cj - 1] == 0) {
 				return true;
@@ -176,7 +176,7 @@ public class Board implements KeyListener, ISubject {
 		return false;
 	}
 
-	public boolean checkRight() {
+	private boolean checkRight() {
 		try {
 			if (board[ci][cj + 1] == 0) {
 				return true;
@@ -204,7 +204,7 @@ public class Board implements KeyListener, ISubject {
 		board[size - 1][size - 1] = 0;
 	}
 
-	public void moveLeft() {
+	private void moveLeft() {
 		if (cj <= 0) {
 			cj = 0;
 		} else {
@@ -213,7 +213,7 @@ public class Board implements KeyListener, ISubject {
 
 	}
 
-	public void moveRight() {
+	private void moveRight() {
 		if (cj >= size - 1) {
 			cj = size - 1;
 		} else {
@@ -221,7 +221,7 @@ public class Board implements KeyListener, ISubject {
 		}
 	}
 
-	public void moveDown() {
+	private void moveDown() {
 		if (ci >= size - 1) {
 			ci = size - 1;
 		} else {
@@ -229,7 +229,7 @@ public class Board implements KeyListener, ISubject {
 		}
 	}
 
-	public void moveUp() {
+	private void moveUp() {
 		if (ci <= 0) {
 			ci = 0;
 		} else {
