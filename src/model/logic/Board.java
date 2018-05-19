@@ -3,6 +3,8 @@ package model.logic;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Random;
+
 import observer.IObserver;
 import observer.ISubject;
 
@@ -13,6 +15,9 @@ public class Board implements KeyListener, ISubject {
 	public Board(int size) {
 		this.size = size;
 		board = new int[size][size];
+		// this array was added for save zero coordinates if he was changed. Writing
+		// execute
+		// for each movement
 		zero = new int[2];
 		zero[0] = size - 1;
 		zero[1] = size - 1;
@@ -20,23 +25,89 @@ public class Board implements KeyListener, ISubject {
 		fillBoard();
 		// Doesn't work calling in constructor, why?!
 		notifyObserver();
+		//mix();
 
 	}
 
-	public void move() {
-		// zero[0] = i of zero and zero[1] = j of zero
-		int a = ci;
-		int b = cj;
-		if (a == zero[0]) {
-			if (b < zero[1]) {
-				int c = zero[1];
-				while(cj != zero[1]) {
-					c--;
-					swap(a, b+c, zero[0], zero[1]);
+
+
+	private void swap(int i, int j) {
+		int elem = board[ci][cj];
+		board[ci][cj] = board[i][j];
+		board[i][j] = elem;
+		zero[0] = ci;
+		zero[1] = cj;
+		
+	}
+
+	private void findZero() {
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board.length; j++) {
+				if(board[i][j] == 0) {
+					zero[0] = i;
+					zero[1] = j;
 				}
-				
 			}
 		}
+	}
+	
+	public void mix() {
+		int a = 0;
+		int b = 0;
+		for (int i = 0; i < 50; i++) {
+//			try {
+//				Thread.sleep(10);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+			a = (int) (Math.random()*size);
+			b = (int) (Math.random()*size);
+			swap(a, b);
+			
+		}
+		findZero();
+		//notifyObserver();
+	}
+	
+	public void move() {
+		int ei = ci, ej = cj;
+		// check line
+		// check horizontal line (I)
+		if (ci == zero[0]) {
+			// chek direction, if j of element < j of zero then move on left else on right
+			if (cj < zero[1]) {
+				while (zero[1] != ej) {
+					//устанавливаем курсор на позицию первого от нуля элемента слева
+					//и так далее пока ноль не встанет на правильную позицию
+					cj = zero[1] - 1;
+					swap(zero[0], zero[1]);
+				}
+			} else {
+				while (zero[1] != ej) {
+					cj = zero[1] + 1;
+					swap(zero[0], zero[1]);
+				}
+			}
+
+		}
+		// check vertical line (J)
+		if (cj == zero[1]) {
+			// chek direction, if i of element < i of zero then move up else down
+			if (ci < zero[0]) {
+				// need to create movement (swap)
+				while (zero[0] != ei) {
+					ci = zero[0] - 1;
+					swap(zero[0], zero[1]);
+				}
+			} else {
+				while (zero[0] != ei) {
+					ci = zero[0] + 1;
+					swap(zero[0], zero[1]);
+				}
+			}
+		}
+
 	}
 
 	// moves element when zero and element is neighbors
@@ -71,6 +142,7 @@ public class Board implements KeyListener, ISubject {
 		}
 	}
 
+	// check next element is 0
 	public boolean checkUp() {
 		try {
 			if (board[ci - 1][cj] == 0) {
@@ -113,22 +185,6 @@ public class Board implements KeyListener, ISubject {
 			return false;
 		}
 		return false;
-	}
-
-	private void swap(int i, int j) {
-		int elem = board[ci][cj];
-		board[ci][cj] = 0;
-		board[i][j] = elem;
-		zero[0] = ci;
-		zero[1] = cj;
-	}
-
-	private void swap(int ci, int cj, int zi, int zj) {
-		int elem = board[ci][cj];
-		board[ci][cj] = 0;
-		board[zi][zj] = elem;
-		zero[0] = this.ci;
-		zero[1] = this.cj;
 	}
 
 	// fill board as default
@@ -233,8 +289,17 @@ public class Board implements KeyListener, ISubject {
 
 			break;
 		case KeyEvent.VK_SPACE:
-			moveElementNextZero();
-			//move();
+			// moveElementNextZero();
+			move();
+
+			break;
+		case KeyEvent.VK_M:
+			mix();
+
+			break;
+		case KeyEvent.VK_S:
+			fillBoard();
+
 			break;
 		default: // notifyObserver();
 			break;
